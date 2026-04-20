@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แบบทดสอบบุคลิกภาพ: คุณเป็นไทป์ไหน?</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f7f9fc;
+            --card-bg: #ffffff;
+            --text-main: #2d3748;
+            --text-muted: #718096;
+            --primary-color: #4a90e2;
+            --primary-hover: #357abd;
+            --btn-bg: #edf2f7;
+            --btn-hover: #e2e8f0;
+            --border-radius: 16px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Prompt', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            width: 100%;
+            max-width: 650px;
+            border-radius: var(--border-radius);
+            padding: 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            position: relative;
+        }
+
+        h1, h2 {
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        p.subtitle {
+            color: var(--text-muted);
+            margin-bottom: 30px;
+            font-size: 1rem;
+        }
+
+        /* ซ่อนส่วนที่ยังไม่ใช้งาน */
+        #quiz-section, #result-section {
+            display: none;
+        }
+
+        .btn-main {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 14px 35px;
+            font-size: 1.1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(74, 144, 226, 0.3);
+        }
+
+        .btn-main:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 10px;
+            background-color: var(--btn-bg);
+            border-radius: 10px;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--primary-color);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        .question-text {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .option-btn {
+            background-color: var(--btn-bg);
+            color: var(--text-main);
+            border: 2px solid transparent;
+            padding: 16px 20px;
+            border-radius: 12px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+            line-height: 1.5;
+        }
+
+        .option-btn:hover {
+            background-color: var(--btn-hover);
+            border-color: #cbd5e0;
+            transform: translateY(-1px);
+        }
+
+        .result-emoji {
+            font-size: 4rem;
+            margin-bottom: 10px;
+        }
+
+        .result-title {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .result-desc {
+            font-size: 1rem;
+            color: var(--text-muted);
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .analysis-box {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .analysis-box h3 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .analysis-box p {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .analysis-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        footer {
+            margin-top: 30px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        /* รองรับมือถือ */
+        @media (max-width: 600px) {
+            .container {
+                padding: 30px 20px;
+            }
+            .question-text {
+                font-size: 1.1rem;
+            }
+            .option-btn {
+                font-size: 0.95rem;
+                padding: 14px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div id="start-section">
+            <h1>คุณเป็นสิ่งมีชีวิตไทป์ไหน?</h1>
+            <p class="subtitle">แบบทดสอบจิตวิทยา 20 ข้อ เพื่อค้นหาตัวตนที่ซ่อนอยู่ของคุณ พร้อมบทวิเคราะห์จุดแข็งและจุดอ่อน</p>
+            <button class="btn-main" onclick="startQuiz()">เริ่มทำแบบทดสอบ</button>
+        </div>
+
+        <div id="quiz-section">
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            <p id="question-counter" class="subtitle" style="margin-bottom: 15px; font-weight: 500;">ข้อ 1 / 20</p>
+            <h2 id="question-text" class="question-text"></h2>
+            <div id="options-container" class="options-grid"></div>
+        </div>
+
+        <div id="result-section">
+            <div id="result-emoji" class="result-emoji"></div>
+            <h2 class="result-title" id="result-title"></h2>
+            <p class="result-desc" id="result-desc"></p>
+            
+            <div class="analysis-box">
+                <h3>✨ จุดแข็ง (Strengths)</h3>
+                <p id="result-strengths"></p>
+                <h3>⚠️ จุดอ่อน (Weaknesses)</h3>
+                <p id="result-weaknesses"></p>
+            </div>
+
+            <button class="btn-main" onclick="location.reload()">เล่นอีกครั้ง</button>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2026 Developed for มหาวิทยาลัยเบงจันทร์ (Bengchanh University)
+    </footer>
+
+    <script>
+        // ข้อมูลประเภท 10 ไทป์
+        const typeData = {
+            dog: {
+                emoji: "🐶", title: "ไทป์หมาโกลเด้น (Golden Retriever)",
+                desc: "คุณเป็นคนเฟรนด์ลี่ เข้ากับคนง่าย พลังบวกเยอะ ซื่อสัตย์และรักพวกพ้องมากๆ ใครอยู่ใกล้ก็รู้สึกอบอุ่น เหมือนพระอาทิตย์ยามเช้า",
+                strengths: "เป็นที่รักของทุกคน, มองโลกในแง่ดี, ซื่อสัตย์, พร้อมช่วยเหลือคนอื่นเสมอโดยไม่หวังผลตอบแทน",
+                weaknesses: "บางครั้งก็ไว้ใจคนง่ายเกินไปจนโดนเอาเปรียบ, ปฏิเสธคนไม่ค่อยเป็น, ขี้เหงาถ้าต้องอยู่คนเดียว"
+            },
+            cat: {
+                emoji: "🐱", title: "ไทป์แมวหยิ่ง (Independent Cat)",
+                desc: "คุณรักอิสระ มีโลกส่วนตัวสูง ไม่ชอบให้ใครมาบังคับ ดูภายนอกอาจจะเย็นชาและเข้าถึงยาก แต่ถ้าสนิทแล้วจะขี้อ้อนมาก",
+                strengths: "พึ่งพาตัวเองได้ดี, มีสมาธิ, ไม่คล้อยตามคนอื่นง่ายๆ, คัดกรองคนเก่ง",
+                weaknesses: "ดูหยิ่งและเข้าถึงยากในสายตาคนแปลกหน้า, บางครั้งเผลอเมินคนอื่นโดยไม่รู้ตัว, เก็บความรู้สึกเก่งเกินไป"
+            },
+            crazydog: {
+                emoji: "🐺", title: "ไทป์หมาบ้า (Crazy Dog)",
+                desc: "พลังงานล้นเหลือ! คุณเป็นคนสุดโต่ง ทำอะไรทำสุด กล้าชนทุกปัญหา รักความยุติธรรมและพร้อมบวกเพื่อคนที่รักเสมอ",
+                strengths: "กล้าหาญ, มีความมุ่งมั่นสูงมาก, ปกป้องคนอื่นได้, ตรงไปตรงมาไม่อ้อมค้อม",
+                weaknesses: "อารมณ์ร้อน, ขาดความรอบคอบในบางครั้ง, ปากไวและอาจเผลอทำร้ายจิตใจคนฟังได้"
+            },
+            sassycat: {
+                emoji: "💅", title: "ไทป์แมววีน (Sassy Cat)",
+                desc: "ตัวแม่ ตัวมัม! คุณมีความมั่นใจ ฝีปากกล้า วิจารณ์ตรงไปตรงมา รักความเพอร์เฟกต์ และไม่ยอมโดนเอาเปรียบเด็ดขาด",
+                strengths: "ฉลาดหลักแหลม, มีเซนส์จับผิดคนเก่ง, ไม่ยอมแพ้อะไรง่ายๆ, มีความเป็นผู้นำสูง",
+                weaknesses: "ขี้หงุดหงิด, มาตรฐานสูงจนคนรอบข้างเกร็ง, บางครั้งคำพูดแทงใจดำคนอื่นสุดๆ"
+            },
+            capybara: {
+                emoji: "🦦", title: "ไทป์คาปิบาร่า (Zen Capybara)",
+                desc: "พี่กะปิปลงตก! คุณคือความสงบสุขของกลุ่ม ไม่ว่าจะเกิดเรื่องวุ่นวายแค่ไหน คุณก็ยังคงนิ่งเฉยและปล่อยวางได้กับทุกสิ่ง",
+                strengths: "ควบคุมอารมณ์เก่งมาก, เข้ากับคนได้ทุกประเภท, ไม่เรื่องมาก, เป็นผู้ฟังที่ดีและไม่ตัดสินใคร",
+                weaknesses: "เฉื่อยชาในบางเรื่อง, ขาดความกระตือรือร้น, ลอยตัวเหนือดราม่าจนบางทีดูเหมือนคนไม่ใส่ใจโลก"
+            },
+            fox: {
+                emoji: "🦊", title: "ไทป์จิ้งจอกเจ้าเล่ห์ (Sly Fox)",
+                desc: "คุณฉลาด มีไหวพริบ เอาตัวรอดเก่ง อ่านเกมขาด และรู้ว่าต้องพูดหรือทำยังไงเพื่อให้สถานการณ์เป็นประโยชน์กับตัวเอง",
+                strengths: "แก้ปัญหาเฉพาะหน้าเก่ง, มีเสน่ห์แพรวพราว, โน้มน้าวใจคนเก่ง, วางแผนได้อย่างแนบเนียน",
+                weaknesses: "คนอื่นอาจมองว่าไว้ใจยาก, มีความลับเยอะ, บางครั้งคิดคำนวณเรื่องผลประโยชน์มากเกินไป"
+            },
+            owl: {
+                emoji: "🦉", title: "ไทป์นกฮูกนักปราชญ์ (Wise Owl)",
+                desc: "สายซุ่มเงียบที่เก็บข้อมูลเก่ง คุณชอบวิเคราะห์ คิดลึกซึ้ง มักจะเป็นที่ปรึกษาที่พึ่งพาได้ และสมองจะแล่นเป็นพิเศษตอนกลางคืน",
+                strengths: "รอบคอบ, มีเหตุผลสูง, ให้คำปรึกษาเก่ง, มองเห็นรายละเอียดที่คนอื่นมักจะมองข้าม",
+                weaknesses: "คิดมากเกินไป (Overthinking), ไลฟ์สไตล์ไม่ค่อยตรงกับชาวบ้าน, ไม่ค่อยชอบความวุ่นวายทางสังคม"
+            },
+            rabbit: {
+                emoji: "🐰", title: "ไทป์กระต่ายตื่นตูม (Panicky Rabbit)",
+                desc: "คุณเซนซิทีฟ ขี้ตกใจง่าย ขี้กังวล แต่ในขณะเดียวกันก็มีความระแวดระวังตัวสูง และมักจะเตรียมพร้อมรับมือกับเรื่องแย่ๆ เสมอ",
+                strengths: "เตรียมพร้อมเสมอ, ละเอียดอ่อนต่อความรู้สึกคนอื่น, ทำงานไวมากเมื่อถึงเดดไลน์เพราะกลัวพลาด",
+                weaknesses: "แพนิคง่าย, เครียดสะสม, ขี้กลัวและไม่ค่อยกล้าก้าวออกจากเซฟโซน"
+            },
+            bear: {
+                emoji: "🐻", title: "ไทป์หมีจำศีล (Hibernating Bear)",
+                desc: "สายชิลล์ที่แท้ทรู ความสุขของคุณคือการได้นอนอยู่บ้าน กินของอร่อยๆ ไม่ชอบการเปลี่ยนแปลง แต่เวลาเอาจริงก็พึ่งพาได้",
+                strengths: "ใจเย็น, อดทนสูง, เป็นเซฟโซนให้คนรอบข้าง, นิ่งสงบและพึ่งพาได้ในยามคับขัน",
+                weaknesses: "ขี้เกียจขั้นสุด, ผลัดวันประกันพรุ่งเก่งมาก, ขยับตัวช้าและแอบดื้อเงียบ"
+            },
+            hamster: {
+                emoji: "🐹", title: "ไทป์แฮมสเตอร์ปั่นจักร (Busy Hamster)",
+                desc: "คุณเป็นพวกอยู่นิ่งไม่เป็น ต้องหาอะไรทำตลอดเวลา บ้างาน ชอบจัดการชีวิตตัวเองและคนรอบข้างให้เป็นระเบียบ",
+                strengths: "โปรดักทีฟมาก, จัดการเวลาเก่ง, มีความรับผิดชอบสูงปรี้ด, พลังงานไม่มีหมด",
+                weaknesses: "กดดันตัวเองเกินไป, ปล่อยวางไม่เป็น, เสี่ยงต่อการ Burnout ง่ายเพราะไม่ยอมพักผ่อน"
+            }
+        };
+
+        // ชุดคำถาม 20 ข้อ (ตรวจสอบ Syntax เรียบร้อย)
+        const questions = [
+            { q: "1. วันหยุดยาวที่รอคอยมาถึงแล้ว คุณเลือกที่จะ...", options: [ {text: "นอนโง่ๆ ดูซีรีส์อยู่บ้าน สั่งของอร่อยมากิน", type: "bear"}, {text: "จัดทริปไปเที่ยวกับแก๊งเพื่อนให้สุดเหวี่ยง!", type: "dog"}, {text: "เคลียร์งานที่ค้างไว้ หรือจัดห้องใหม่ให้เนี๊ยบ", type: "hamster"}, {text: "ไปคาเฟ่เงียบๆ คนเดียว นั่งอ่านหนังสือ", type: "cat"} ] },
+            { q: "2. เมื่อมีเรื่องผิดพลาดเกิดขึ้นกะทันหัน คุณจะ...", options: [text: "ช็อก! สติหลุดไปแป๊บนึงก่อน", type: "rabbit"}, {text: "ตั้งสติ หาสาเหตุ และคิดวิธีแก้ปัญหา", type: "owl"}, {text: "ช่างมันเถอะ ปล่อยจอย เดี๋ยวก็ผ่านไป", type: "capybara"}, {text: "เนียนๆ หาทางพลิกสถานการณ์ให้ตัวเองรอด", type: "fox"} ] },
+            { q: "3. บทบาทของคุณในกลุ่มเพื่อนคือแบบไหน?", options: [ {text: "ตัวฮา ตัวเปิด คอยสร้างบรรยากาศ", type: "dog"}, {text: "คนนั่งฟังเงียบๆ ใครว่าไงก็ว่าตามกัน", type: "capybara"}, {text: "ตัวแม่ คอยด่าเรียกสติเพื่อนแบบเจ็บๆ", type: "sassycat"}, {text: "ที่ปรึกษา คอยให้คำแนะนำอย่างมีหลักการ", type: "owl"} ] },
+            { q: "4. วิธีจัดการความเครียดในแบบของคุณคือ...", options: [ {text: "โวยวาย บ่นลงโซเชียล หรือระบายให้เพื่อนฟัง", type: "crazydog"}, {text: "กินของหวาน แล้วนอนหลับหนีความจริง", type: "bear"}, {text: "หาอะไรทำยุ่งๆ จะได้ลืมๆ มันไป", type: "hamster"}, {text: "ตัดขาดจากโลกภายนอก อยู่เงียบๆ คนเดียว", type: "cat"} ] },
+            { q: "5. พฤติกรรมแบบไหนของคนอื่นที่ทำให้คุณปรี๊ดแตกที่สุด?", options: [ {text: "คนทำงานช้า ไม่เป็นระเบียบ ไม่ตรงเวลา", type: "hamster"}, {text: "คนที่เอาเปรียบคนอื่น หรือทำตัวไม่ยุติธรรม", type: "crazydog"}, {text: "คนที่ล้ำเส้น พื้นที่ส่วนตัวมากเกินไป", type: "cat"}, {text: "คนที่น่าเบื่อ หรือตามความคิดคุณไม่ทัน", type: "fox"} ] },
+            { q: "6. เวลาต้องทำความรู้จักเพื่อนใหม่ คุณจะ...", options: [ {text: "พุ่งเข้าไปทักทาย ชวนคุยอย่างเป็นมิตร", type: "dog"}, {text: "รอดูท่าที และประเมินนิสัยเขาก่อน", type: "owl"}, {text: "หน้านิ่งๆ ไว้ก่อน รอให้เขาทักมาก่อน", type: "sassycat"}, {text: "ยิ้มๆ สบายๆ ใครเข้ามาคุยก็คุยได้หมด", type: "capybara"} ] },
+            { q: "7. สไตล์การแชทของคุณเป็นยังไง?", options: [ {text: "พิมพ์ไว ตอบเร็ว ส่งสติกเกอร์รัวๆ เป็นคอมโบ", type: "dog"}, {text: "อ่านแล้วไม่ค่อยตอบ หรือตอบแค่ 'อืม' 'โอเค'", type: "cat"}, {text: "พิมพ์ยาวเป็นเรียงความ อธิบายทุกประเด็น", type: "sassycat"}, {text: "แล้วแต่อารมณ์ ดองแชทข้ามวันเป็นเรื่องปกติ", type: "bear"} ] },
+            { q: "8. มีคนมาขอความช่วยเหลือในเรื่องที่คุณพอทำได้ คุณจะ...", options: [ {text: "ตอบตกลงช่วยทันทีแบบไม่ต้องคิด", type: "dog"}, {text: "ประเมินก่อนว่าช่วยแล้วตัวเองเสียประโยชน์ไหม", type: "fox"}, {text: "ถ้าไม่เหนื่อยเกินไป ก็ช่วยได้แหละ", type: "capybara"}, {text: "บ่นไปหนึ่งแมตช์ว่าทำไมไม่ทำเอง แต่ก็ช่วยนะ", type: "sassycat"} ] },
+            { q: "9. ในการทำงานกลุ่ม คุณมักจะรับหน้าที่...", options: [ {text: "หัวหน้างาน คอยแจกจ่ายและตามงานทุกคน", type: "hamster"}, {text: "ฝ่ายซัพพอร์ต สั่งอะไรมาก็ทำตามนั้น", type: "bear"}, {text: "ฝ่ายพรีเซนต์ ใช้ทักษะการพูดโน้มน้าวคนฟัง", type: "fox"}, {text: "คอยตรวจเช็กความเรียบร้อย กลัวงานออกมาพลาด", type: "rabbit"} ] },
+            { q: "10. ความคิดแรกในหัวตอนตื่นนอนคืออะไร?", options: [ {text: "วันนี้ต้องทำอะไรบ้าง ลิสต์ตารางไว้ในหัว", type: "hamster"}, {text: "ขอนอนต่ออีก 5 นาที... (สุดท้ายตื่นสาย)", type: "bear"}, {text: "วันนี้จะแต่งตัวลุคไหนให้ดูปังที่สุดดี", type: "sassycat"}, {text: "ตายแล้ว! จะสายไหมเนี่ย รีบอาบน้ำด่วน!", type: "rabbit"} ] },
+            { q: "11. ถ้าต้องร่วมงานกับคนที่คุณเกลียด...", options: [ {text: "ยิ้มให้แบบมืออาชีพ แต่ในใจสาปแช่งไปแล้ว", type: "fox"}, {text: "พร้อมปะทะตาต่อตา ฟันต่อฟัน ถ้ามีปัญหา", type: "crazydog"}, {text: "เมินใส่ ทำเหมือนเขาเป็นแค่อากาศธาตุ", type: "cat"}, {text: "ก้มหน้าก้มตาทำงาน ไม่อยากมีปัญหา", type: "capybara"} ] },
+            { q: "12. พื้นที่เซฟโซนของคุณคือที่ไหน?", options: [ {text: "เตียงนุ่มๆ กับหมอนข้างเน่าๆ", type: "bear"}, {text: "โต๊ะทำงานที่จัดของไว้อย่างเป็นระเบียบ", type: "hamster"}, {text: "ห้องมืดๆ เงียบๆ ตอนกลางคืน", type: "owl"}, {text: "ท่ามกลางกลุ่มเพื่อนหรือคนที่รัก", type: "dog"} ] },
+            { q: "13. เมื่อคุณเผลอทำผิดพลาดอย่างจัง...", options: [ {text: "แพนิคหนักมาก โทษตัวเองซ้ำไปซ้ำมา", type: "rabbit"}, {text: "หาข้ออ้างเนียนๆ ให้ดูเหมือนไม่ได้ตั้งใจพลาด", type: "fox"}, {text: "ยอมรับผิดตรงๆ และรีบหาทางแก้ไข", type: "owl"}, {text: "หงุดหงิดใส่ตัวเอง พาลไปหมดทุกสิ่ง", type: "crazydog"} ] },
+            { q: "14. คำชมแบบไหนที่คุณฟังแล้วใจฟูที่สุด?", options: [ {text: "'แกเป็นคนเก่งและฉลาดล้ำลึกมากนะ'", type: "owl"}, {text: "'อยู่กับแกแล้วสบายใจจัง'", type: "dog"}, {text: "'งานแกเนียบและเป๊ะมาก สุดยอดไปเลย'", type: "hamster"}, {text: "'แกมันตัวแม่ สวย รวย เริ่ด!'", type: "sassycat"} ] },
+            { q: "15. เป้าหมายสูงสุดในชีวิตของคุณคืออะไร?", options: [ {text: "ความสงบสุข ไม่ต้องวุ่นวายปวดหัวกับใคร", type: "capybara"}, {text: "อิสระเสรี อยากทำอะไรก็ทำ ไม่มีใครบังคับ", type: "cat"}, {text: "ประสบความสำเร็จ มั่นคง มีอำนาจ", type: "fox"}, {text: "มีกัลยาณมิตรที่ดี ปกป้องคนที่รักได้", type: "crazydog"} ] },
+            { q: "16. เวลาที่คุณโกรธจัด คุณจะแสดงออกแบบไหน?", options: [ {text: "ด่าไฟแลบ ขุดอดีตทุกเรื่องมาต่อว่า", type: "crazydog"}, {text: "จิกกัดด้วยคำพูดนิ่งๆ แต่แทงทะลุถึงหัวใจ", type: "sassycat"}, {text: "เงียบ ไม่คุยด้วย ปล่อยให้เดาเอาเองว่าโกรธ", type: "cat"}, {text: "ร้องไห้ออกมาเพราะโกรธจนอธิบายไม่ถูก", type: "rabbit"} ] },
+            { q: "17. สมมติว่าถูกหวยรางวัลที่ 1 คุณจะทำอะไรเป็นอย่างแรก?", options: [ {text: "เก็บเงียบๆ แล้ววางแผนการลงทุนอย่างรัดกุม", type: "owl"}, {text: "ป่าวประกาศให้โลกรู้ แล้วเลี้ยงฉลองชุดใหญ่!", type: "dog"}, {text: "กวาดซื้อของแบรนด์เนมที่เล็งไว้นานแล้ว", type: "sassycat"}, {text: "ใช้ชีวิตแบบเดิม แต่สั่งของกินแพงๆ มากินที่บ้าน", type: "bear"} ] },
+            { q: "18. กิจวัตรประจำวันก่อนนอนของคุณคือ...", options: [ {text: "คิดทบทวนเรื่องราวที่เกิดขึ้นในวันนี้อย่างลึกซึ้ง", type: "owl"}, {text: "เช็กตารางงานของวันพรุ่งนี้ว่ามีอะไรบ้าง", type: "hamster"}, {text: "ไถโซเชียล ดูคลิปหมาแมวเพลินๆ", type: "capybara"}, {text: "กังวลเรื่องที่ยังไม่เกิดจนนอนไม่หลับ", type: "rabbit"} ] },
+            { q: "19. คุณมีความคิดเห็นอย่างไรกับ 'กฎระเบียบ'?", options: [ {text: "เป็นสิ่งที่ต้องปฏิบัติตามอย่างเคร่งครัด", type: "hamster"}, {text: "มีไว้แหก ถ้ามันไม่สมเหตุสมผล!", type: "crazydog"}, {text: "รู้ไว้เพื่อหาช่องโหว่ หรือเอาตัวรอดจากมัน", type: "fox"}, {text: "ก็ทำตามนะ แต่ถ้าไม่มีใครเห็นก็แอบอู้บ้าง", type: "bear"} ] },
+            { q: "20. คุณคิดว่าคนอื่นมองคุณเป็นคนแบบไหน?", options: [ {text: "คนติสต์ๆ เดาใจยาก เข้าถึงยาก", type: "cat"}, {text: "คนใจดี น่ารัก พึ่งพาได้เสมอ", type: "dog"}, {text: "ตัวจี๊ดประจำกลุ่ม แรงมาแรงกลับ", type: "sassycat"}, {text: "คนชิลล์ๆ อะไรก็ได้ สบายๆ ไว้ก่อน", type: "capybara"} ] }
+        ];
+
+        let currentQuestion = 0;
+        let scores = { dog: 0, cat: 0, crazydog: 0, sassycat: 0, capybara: 0, fox: 0, owl: 0, rabbit: 0, bear: 0, hamster: 0 };
+
+        function startQuiz() {
+            document.getElementById('start-section').style.display = 'none';
+            document.getElementById('quiz-section').style.display = 'block';
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const qData = questions[currentQuestion];
+            document.getElementById('question-counter').innerText = `ข้อ ${currentQuestion + 1} / ${questions.length}`;
+            document.getElementById('question-text').innerText = qData.q;
+            
+            // อัปเดตแถบ Progress
+            const progress = ((currentQuestion) / questions.length) * 100;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = ''; 
+
+            // สุ่มลำดับตัวเลือกไม่ให้จำเจ
+            const shuffledOptions = [...qData.options].sort(() => Math.random() - 0.5);
+
+            shuffledOptions.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = opt.text;
+                btn.onclick = () => selectOption(opt.type);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function selectOption(type) {
+            scores[type]++;
+            currentQuestion++;
+
+            if (currentQuestion < questions.length) {
+                showQuestion();
+            } else {
+                calculateResult();
+            }
+        }
+
+        function calculateResult() {
+            document.getElementById('progress-bar').style.width = `100%`;
+            
+            setTimeout(() => {
+                document.getElementById('quiz-section').style.display = 'none';
+                document.getElementById('result-section').style.display = 'block';
+
+                let maxScore = -1;
+                let finalType = '';
+
+                // หาไทป์ที่ได้คะแนนสูงสุด
+                for (const [type, score] of Object.entries(scores)) {
+                    if (score > maxScore) {
+                        maxScore = score;
+                        finalType = type;
+                    }
+                }
+
+                const result = typeData[finalType];
+                document.getElementById('result-emoji').innerText = result.emoji;
+                document.getElementById('result-title').innerText = result.title;
+                document.getElementById('result-desc').innerText = result.desc;
+                document.getElementById('result-strengths').innerText = result.strengths;
+                document.getElementById('result-weaknesses').innerText = result.weaknesses;
+
+            }, 400); // หน่วงเวลาเล็กน้อยให้ Progress Bar วิ่งเต็ม
+        }
+    </script>
+</body>
+</html>
