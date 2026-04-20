@@ -64,7 +64,6 @@
             font-size: 1rem;
         }
 
-        /* ซ่อนส่วนที่ยังไม่ใช้งาน */
         #quiz-section, #result-section {
             display: none;
         }
@@ -187,7 +186,6 @@
             text-align: center;
         }
 
-        /* รองรับมือถือ */
         @media (max-width: 600px) {
             .container {
                 padding: 30px 20px;
@@ -241,7 +239,6 @@
     </footer>
 
     <script>
-        // ข้อมูลประเภท 10 ไทป์
         const typeData = {
             dog: {
                 emoji: "🐶", title: "ไทป์หมาโกลเด้น (Golden Retriever)",
@@ -305,10 +302,9 @@
             }
         };
 
-        // ชุดคำถาม 20 ข้อ (ตรวจสอบ Syntax เรียบร้อย)
         const questions = [
             { q: "1. วันหยุดยาวที่รอคอยมาถึงแล้ว คุณเลือกที่จะ...", options: [ {text: "นอนโง่ๆ ดูซีรีส์อยู่บ้าน สั่งของอร่อยมากิน", type: "bear"}, {text: "จัดทริปไปเที่ยวกับแก๊งเพื่อนให้สุดเหวี่ยง!", type: "dog"}, {text: "เคลียร์งานที่ค้างไว้ หรือจัดห้องใหม่ให้เนี๊ยบ", type: "hamster"}, {text: "ไปคาเฟ่เงียบๆ คนเดียว นั่งอ่านหนังสือ", type: "cat"} ] },
-            { q: "2. เมื่อมีเรื่องผิดพลาดเกิดขึ้นกะทันหัน คุณจะ...", options: [text: "ช็อก! สติหลุดไปแป๊บนึงก่อน", type: "rabbit"}, {text: "ตั้งสติ หาสาเหตุ และคิดวิธีแก้ปัญหา", type: "owl"}, {text: "ช่างมันเถอะ ปล่อยจอย เดี๋ยวก็ผ่านไป", type: "capybara"}, {text: "เนียนๆ หาทางพลิกสถานการณ์ให้ตัวเองรอด", type: "fox"} ] },
+            { q: "2. เมื่อมีเรื่องผิดพลาดเกิดขึ้นกะทันหัน คุณจะ...", options: [ {text: "ช็อก! สติหลุดไปแป๊บนึงก่อน", type: "rabbit"}, {text: "ตั้งสติ หาสาเหตุ และคิดวิธีแก้ปัญหา", type: "owl"}, {text: "ช่างมันเถอะ ปล่อยจอย เดี๋ยวก็ผ่านไป", type: "capybara"}, {text: "เนียนๆ หาทางพลิกสถานการณ์ให้ตัวเองรอด", type: "fox"} ] },
             { q: "3. บทบาทของคุณในกลุ่มเพื่อนคือแบบไหน?", options: [ {text: "ตัวฮา ตัวเปิด คอยสร้างบรรยากาศ", type: "dog"}, {text: "คนนั่งฟังเงียบๆ ใครว่าไงก็ว่าตามกัน", type: "capybara"}, {text: "ตัวแม่ คอยด่าเรียกสติเพื่อนแบบเจ็บๆ", type: "sassycat"}, {text: "ที่ปรึกษา คอยให้คำแนะนำอย่างมีหลักการ", type: "owl"} ] },
             { q: "4. วิธีจัดการความเครียดในแบบของคุณคือ...", options: [ {text: "โวยวาย บ่นลงโซเชียล หรือระบายให้เพื่อนฟัง", type: "crazydog"}, {text: "กินของหวาน แล้วนอนหลับหนีความจริง", type: "bear"}, {text: "หาอะไรทำยุ่งๆ จะได้ลืมๆ มันไป", type: "hamster"}, {text: "ตัดขาดจากโลกภายนอก อยู่เงียบๆ คนเดียว", type: "cat"} ] },
             { q: "5. พฤติกรรมแบบไหนของคนอื่นที่ทำให้คุณปรี๊ดแตกที่สุด?", options: [ {text: "คนทำงานช้า ไม่เป็นระเบียบ ไม่ตรงเวลา", type: "hamster"}, {text: "คนที่เอาเปรียบคนอื่น หรือทำตัวไม่ยุติธรรม", type: "crazydog"}, {text: "คนที่ล้ำเส้น พื้นที่ส่วนตัวมากเกินไป", type: "cat"}, {text: "คนที่น่าเบื่อ หรือตามความคิดคุณไม่ทัน", type: "fox"} ] },
@@ -343,14 +339,12 @@
             document.getElementById('question-counter').innerText = `ข้อ ${currentQuestion + 1} / ${questions.length}`;
             document.getElementById('question-text').innerText = qData.q;
             
-            // อัปเดตแถบ Progress
             const progress = ((currentQuestion) / questions.length) * 100;
             document.getElementById('progress-bar').style.width = `${progress}%`;
 
             const optionsContainer = document.getElementById('options-container');
             optionsContainer.innerHTML = ''; 
 
-            // สุ่มลำดับตัวเลือกไม่ให้จำเจ
             const shuffledOptions = [...qData.options].sort(() => Math.random() - 0.5);
 
             shuffledOptions.forEach(opt => {
@@ -383,7 +377,6 @@
                 let maxScore = -1;
                 let finalType = '';
 
-                // หาไทป์ที่ได้คะแนนสูงสุด
                 for (const [type, score] of Object.entries(scores)) {
                     if (score > maxScore) {
                         maxScore = score;
@@ -398,7 +391,7 @@
                 document.getElementById('result-strengths').innerText = result.strengths;
                 document.getElementById('result-weaknesses').innerText = result.weaknesses;
 
-            }, 400); // หน่วงเวลาเล็กน้อยให้ Progress Bar วิ่งเต็ม
+            }, 400); 
         }
     </script>
 </body>
